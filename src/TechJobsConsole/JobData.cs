@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -48,8 +50,9 @@ namespace TechJobsConsole
             foreach (Dictionary<string, string> row in AllJobs)
             {
                 string aValue = row[column];
-
-                if (aValue.Contains(value))
+                int index = value.IndexOf(aValue, StringComparison.CurrentCultureIgnoreCase);
+                if (index >= 0)
+                //if (aValue.Contains(value))
                 {
                     jobs.Add(row);
                 }
@@ -58,8 +61,48 @@ namespace TechJobsConsole
             return jobs;
         }
 
-        /*
-         * Load and parse data from job_data.csv
+        /*string s = "foobarbaz";
+int index = s.IndexOf("BAR", StringComparison.CurrentCultureIgnoreCase);
+        /*(Convert.ToString(objSSListItem["Title"])
+    .IndexOf(searchWord, StringComparison.InvariantCultureIgnoreCase)) >= 0
+        /*string title = "STRING";
+        bool contains = title.Contains("string", StringComparison.OrdinalIgnoreCase);*/
+
+        public static List<Dictionary<string, string>> FindByValue(string searchTerm)
+        {
+            LoadData();
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> row in job)
+                {
+                    string vp = row.Value;
+                    if (System.Text.RegularExpressions.Regex.IsMatch(vp, searchTerm, System.Text.RegularExpressions.RegexOptions.IgnoreCase)) 
+                    {
+                            if (jobs.Contains(job))
+                            {
+                                ;
+                            }
+                            else
+                            {
+                                jobs.Add(job);
+                            }
+                    }
+
+                }
+                /*if (job.Values.Any(v => v.Contains(searchTerm)))
+                {
+                    jobs.Add(job);
+                }*/
+              
+            }
+
+            return jobs;
+        }
+        
+         /* Load and parse data from job_data.csv
          */
         private static void LoadData()
         {
